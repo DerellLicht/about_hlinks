@@ -1,73 +1,73 @@
-CFLAGS=-Wall -O2
+USE_64BIT = NO
+USE_UNICODE = NO
+USE_CLANG = NO
+# use -static for clang and cygwin/mingw
+USE_STATIC = NO
+
+#  clang++ vs tdm g++
+#  clang gives *much* clearer compiler error messages...
+#  However, programs built with clang++ will require libc++.dll.
+#  in order to be used elsewhere.
+#  That is why the executable files are smaller than TDM ...
+ifeq ($(USE_64BIT),YES)
+TOOLS=d:\tdm64\bin
+else
+ifeq ($(USE_CLANG),YES)
+TOOLS=d:\clang\bin
+else
+TOOLS=d:\tdm32\bin
+endif
+endif
+
+ifeq ($(USE_DEBUG),YES)
+CFLAGS=-Wall -O -g
+LFLAGS=
+else
+CFLAGS=-Wall -O3
+LFLAGS=-s
+endif
 CFLAGS += -Wno-write-strings
-CFLAGS += -Wno-stringop-truncation
-CFLAGS += -Wno-format-overflow
+CFLAGS += -Weffc++
 
-#LiFLAGS = -Ider_libs
-CFLAGS += -Ider_libs
+# link application-specific sources
+CSRC=about_hlinks.cpp about.cpp hyperlinks.cpp
 
-#  clang-tidy options
-CHFLAGS = -header-filter=.*
-CHTAIL = -- -Ider_libs 
+OBJS = $(CSRC:.cpp=.o) rc.o
 
-CPPSRC=wbigcalc.cpp bigcalc.cpp bigmath.cpp bigmisc.cpp bigprint.cpp \
-config.cpp options.cpp about.cpp hyperlinks.cpp \
-der_libs/common_funcs.cpp \
-der_libs/common_win.cpp \
-der_libs/winmsgs.cpp \
-der_libs/tooltips.cpp \
-der_libs/statbar.cpp
-	
-LINTFILES=lintdefs.cpp lintdefs.ref.h 
-
-OBJS = $(CPPSRC:.cpp=.o) dlgres.o
-
-BIN=wbigcalc.exe
+BIN=about_hlinks
+BINX=$(BIN).exe
 
 #************************************************************
 %.o: %.cpp
-	g++ $(CFLAGS) -Weffc++ -c $< -o $@
+	$(TOOLS)/g++ $(CFLAGS) -Weffc++ -c $< -o $@
 
-all: $(BIN)
+all: $(BINX)
 
 clean:
-	rm -vf $(BIN) $(OBJS)
-
-wc:
-	wc -l *.cpp *.rc
-
-check:
-	cmd /C "d:\clang\bin\clang-tidy.exe $(CHFLAGS) $(CPPSRC) $(CHTAIL)"
-
-lint:
-	cmd /C "c:\lint9\lint-nt +v -width(160,4) -Ider_libs +fcp -ic:\lint9 mingw.lnt -os(_lint.tmp) $(LINTFILES) dlgres.rc $(CPPSRC)"
+	rm -f *.exe *.zip *.bak $(OBJS)
 
 dist:
-	rm -f wbigcalc.zip
-	zip wbigcalc.zip wbigcalc.exe wbigcalc.chm bigcalc.txt LICENSE readme.md
+	rm -f *.zip
+	zip $(BIN).zip $(BIN).exe readme.md 
 
-$(BIN): $(OBJS)
-	g++ $(CFLAGS) -mwindows -s $(OBJS) -o $@ -lcomctl32 -lgdi32 -lcomdlg32 -lhtmlhelp
-
-dlgres.o: dlgres.rc
-	windres -O COFF $< -o $@
+lint:
+	cmd /C "c:\lint9\lint-nt +v -width(160,4) -ic:\lint9 -ider_libs mingw.lnt -os(_lint.tmp) lintdefs.cpp $(CSRC)"
 
 depend:
-	makedepend $(CPPSRC)
+	makedepend $(CFLAGS) $(CSRC)
+
+#************************************************************
+
+$(BIN).exe: $(OBJS)
+	$(TOOLS)/g++ $(CFLAGS) -mwindows -s $(OBJS) -o $@
+
+#	\\InnoSetup5\iscc /Q winagrams.iss
+
+rc.o: about_hlinks.rc
+	$(TOOLS)\windres $< -O coff -o $@
 
 # DO NOT DELETE
 
-wbigcalc.o: version.h keywin32.h resource.h bigcalc.h
-bigcalc.o: resource.h bigcalc.h keywin32.h
-bigmath.o: bigcalc.h
-bigmisc.o: keywin32.h bigcalc.h
-bigprint.o: bigcalc.h
-config.o: bigcalc.h
-options.o: resource.h bigcalc.h
+about_hlinks.o: version.h resource.h
 about.o: resource.h version.h hyperlinks.h
-hyperlinks.o: hyperlinks.h
-der_libs/common_funcs.o: der_libs/common.h
-der_libs/common_win.o: der_libs/common.h der_libs/commonw.h
-der_libs/tooltips.o: der_libs/iface_32_64.h der_libs/common.h
-der_libs/tooltips.o: der_libs/tooltips.h
-der_libs/statbar.o: der_libs/common.h der_libs/commonw.h der_libs/statbar.h
+hyperlinks.o: iface_32_64.h hyperlinks.h

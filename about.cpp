@@ -25,10 +25,6 @@
 #include "version.h"
 #include "hyperlinks.h"
 
-//  window.mgr.cpp
-extern HINSTANCE hInst ;
-// extern OSVERSIONINFO gOSV;
-
 /*-----------------------------------------------------------------------------
 
 FUNCTION: AboutDlgProc(HWND, UINT, WPARAM, LPARAM)
@@ -58,11 +54,11 @@ static INT_PTR CALLBACK AboutDlgProc(HWND hdlg, UINT uMessage, WPARAM wparam, LP
    case WM_COMMAND:
       switch (LOWORD(wparam)) {
       case IDC_WEBLINK:
-         ShellExecute(hdlg, "open", "http://derelllicht.42web.io/wbigcalc.html", "", "", SW_SHOW);
+         ShellExecute(hdlg, "open", "http://derelllicht.42web.io/freeware.html", "", "", SW_SHOW);
          return TRUE;
          
       case IDC_WEBLINK2:
-         ShellExecute(hdlg, "open", "https://github.com/DerellLicht/WBigCalc", "", "", SW_SHOW);
+         ShellExecute(hdlg, "open", "https://github.com/DerellLicht/about_hlinks", "", "", SW_SHOW);
          return TRUE;
          
       case IDOK:
@@ -84,8 +80,6 @@ PURPOSE: Creates the modal About dialog
 -----------------------------------------------------------------------------*/
 BOOL CmdAbout(HWND hwnd)
 {
-    // syslog("WM_COMMAND: IDM_ABOUT\n");
-    // DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUT), hwnd, AboutDlgProc);
-    DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUT), 0, AboutDlgProc);
+    DialogBox((HINSTANCE)GetWindowLong(hwnd, GWL_HINSTANCE), MAKEINTRESOURCE(IDD_ABOUT), 0, AboutDlgProc);
     return 0;
-}  //lint !e715  hwnd
+}  //lint !e715 !e818  hwnd

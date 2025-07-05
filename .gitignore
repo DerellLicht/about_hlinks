@@ -1,0 +1,14 @@
+*.jpg
+*.png
+*.exe
+*.bak
+*.o
+*.zip
+_lint.tmp
+*.ini
+*.chm
+HelpNDoc/*.chm
+HelpNDoc/*.pdf
+HND9/
+_rjtemp_mkfile.htm
+output.txt

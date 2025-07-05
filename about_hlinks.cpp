@@ -3,7 +3,6 @@
 //  about_hlinks - example program - About dialog with hyperlinks
 //**********************************************************************
 
-// char const * const VerNum = "V1.07" ;
 static char szClassName[] = "about_hlinks" ;
 
 #include <windows.h>
@@ -103,9 +102,6 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
    //  create the main application
    HWND hwnd = CreateDialog(hInstance, MAKEINTRESOURCE(IDD_MAIN_DIALOG), NULL, (DLGPROC) WndProc);
    if (hwnd == NULL) {
-      // Notified your about the failure
-      // syslog("CreateDialog (main): %s [%u]\n", get_system_message(), GetLastError()) ;
-      // Set the return value
       return FALSE;
    }
    ShowWindow (hwnd, SW_SHOW) ;

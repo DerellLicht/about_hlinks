@@ -3,20 +3,9 @@
     This is a part of the Microsoft Source Code Samples. 
     Copyright (C) 1995 Microsoft Corporation.
     All rights reserved. 
-    This source code is only intended as a supplement to 
-    Microsoft Development Tools and/or WinHelp documentation.
-    See these sources for detailed information regarding the 
-    Microsoft samples programs.
-
     MODULE:   About.c
 
     PURPOSE:  Implement the About dialog box for the program.
-
-    FUNCTIONS:
-        CmdAbout     - Creates the About dialog in response to menu selection
-        AboutDlgProc - Processes messages for the About dialog
-        InitAboutDlg - Initialzes about dialog controls
-
 -----------------------------------------------------------------------------*/
 
 #include <windows.h>
@@ -25,22 +14,7 @@
 #include "version.h"
 #include "hyperlinks.h"
 
-/*-----------------------------------------------------------------------------
-
-FUNCTION: AboutDlgProc(HWND, UINT, WPARAM, LPARAM)
-
-PURPOSE: Dialog procedure for the "About Box"
-
-PARAMETERS:
-    hdlg     - dialog window handle
-    uMessage - window message
-    wparam   - message parameter (depends on message value)
-    lparam   - message prarmeter (depends on message value)
-
-HISTORY:    Date:      Author:     Comment:
-            10/27/95   AllenD      Wrote it
-
------------------------------------------------------------------------------*/
+//-----------------------------------------------------------------------------
 //static BOOL CALLBACK AboutDlgProc(HWND hdlg, UINT uMessage, WPARAM wparam, LPARAM lparam)
 static INT_PTR CALLBACK AboutDlgProc(HWND hdlg, UINT uMessage, WPARAM wparam, LPARAM lparam)
 {

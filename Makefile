@@ -48,7 +48,7 @@ clean:
 
 dist:
 	rm -f *.zip
-	zip $(BIN).zip $(BIN).exe readme.md 
+	zip $(BIN).zip $(BIN).exe readme.md LICENSE
 
 lint:
 	cmd /C "c:\lint9\lint-nt +v -width(160,4) -ic:\lint9 -ider_libs mingw.lnt -os(_lint.tmp) lintdefs.cpp $(CSRC)"

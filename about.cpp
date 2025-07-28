@@ -30,12 +30,8 @@ static INT_PTR CALLBACK AboutDlgProc(HWND hdlg, UINT uMessage, WPARAM wparam, LP
    case WM_COMMAND:
       switch (LOWORD(wparam)) {
       case IDC_WEBLINK:
-         GetDlgItemText(hdlg, IDC_WEBLINK, buf, BUF_LEN);
-         ShellExecute(hdlg, "open", buf, "", "", SW_SHOW);
-         return TRUE;
-         
       case IDC_WEBLINK2:
-         GetDlgItemText(hdlg, IDC_WEBLINK2, buf, BUF_LEN);
+         GetDlgItemText(hdlg, LOWORD(wparam), buf, BUF_LEN);
          ShellExecute(hdlg, "open", buf, "", "", SW_SHOW);
          return TRUE;
          

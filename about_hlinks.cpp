@@ -3,6 +3,8 @@
 //  about_hlinks - example program - About dialog with hyperlinks
 //**********************************************************************
 
+//  This conversion from C array to <vector> class,
+//  change executable size from 32KB to 144KB
 // #define  USE_VECTOR_CLASS
 #undef  USE_VECTOR_CLASS
 

@@ -1,11 +1,17 @@
 //**********************************************************************
-//  Copyright (c) 2009-2025  Derell Licht
+//  Copyright (c) 2009-2026  Derell Licht
 //  about_hlinks - example program - About dialog with hyperlinks
 //**********************************************************************
+
+// #define  USE_VECTOR_CLASS
+#undef  USE_VECTOR_CLASS
 
 static char szClassName[] = "about_hlinks" ;
 
 #include <windows.h>
+#ifdef USE_VECTOR_CLASS
+#include <vector>
+#endif
 
 typedef  unsigned int  uint ;
 
@@ -69,28 +75,63 @@ static bool do_destroy(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam, LP
 }
 
 //*******************************************************************
-typedef struct winproc_table_s {
+struct winproc_table_s {
    uint win_code ;
    bool (*winproc_func)(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam, LPVOID private_data) ;
-} winproc_table_t ;
+#ifdef USE_VECTOR_CLASS
+   winproc_table_s (
+      uint iwin_code,
+      bool (*iwinproc_func)(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam, LPVOID private_data)) ;
+#endif      
+} ;
 
-static winproc_table_t const winproc_table[] = {
+#ifdef USE_VECTOR_CLASS
+winproc_table_s::winproc_table_s (
+   uint iwin_code,
+   bool (*iwinproc_func)(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam, LPVOID private_data)
+) :
+   win_code(iwin_code),
+   winproc_func(iwinproc_func)
+{}
+
+//  This conversion from C array to <vector> class,
+//  change executable size from 32KB to 144KB
+static std::vector<winproc_table_s> winproc_table = {
+{ WM_INITDIALOG,     do_init_dialog },
+{ WM_COMMAND,        do_command },
+{ WM_CLOSE,          do_close },
+{ WM_DESTROY,        do_destroy },
+};
+
+#else
+
+static winproc_table_s const winproc_table[] = {
 { WM_INITDIALOG,     do_init_dialog },
 { WM_COMMAND,        do_command },
 { WM_CLOSE,          do_close },
 { WM_DESTROY,        do_destroy },
 
 { 0, NULL } } ;
+#endif
 
 //*******************************************************************
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+#ifdef USE_VECTOR_CLASS
+   for(auto &winproc_element : winproc_table) {
+      if (winproc_element.win_code == message) {
+         return (*winproc_element.winproc_func)(hwnd, message, wParam, lParam, NULL) ;
+      }
+   }
+#else
    uint idx ;
    for (idx=0; winproc_table[idx].win_code != 0; idx++) {
       if (winproc_table[idx].win_code == message) {
          return (*winproc_table[idx].winproc_func)(hwnd, message, wParam, lParam, NULL) ;
       }
    }
+#endif   
+   
    return false;
 }  //lint !e715
 

@@ -20,6 +20,7 @@ static INT_PTR CALLBACK AboutDlgProc(HWND hdlg, UINT uMessage, WPARAM wparam, LP
 {
 #define  BUF_LEN  255
    char buf[BUF_LEN+1];
+   
    switch(uMessage) {
    case WM_INITDIALOG:
       SetWindowText(GetDlgItem(hdlg, IDC_VERNUM), VerNum) ;

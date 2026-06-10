@@ -5,8 +5,8 @@
 
 //  This conversion from C array to <vector> class,
 //  change executable size from 32KB to 144KB
-// #define  USE_VECTOR_CLASS
-#undef  USE_VECTOR_CLASS
+#define  USE_VECTOR_CLASS
+// #undef  USE_VECTOR_CLASS
 
 static char szClassName[] = "about_hlinks" ;
 
@@ -95,26 +95,24 @@ winproc_table_s::winproc_table_s (
    win_code(iwin_code),
    winproc_func(iwinproc_func)
 {}
+#endif
 
 //  This conversion from C array to <vector> class,
 //  change executable size from 32KB to 144KB
+#ifdef USE_VECTOR_CLASS
 static std::vector<winproc_table_s> winproc_table = {
-{ WM_INITDIALOG,     do_init_dialog },
-{ WM_COMMAND,        do_command },
-{ WM_CLOSE,          do_close },
-{ WM_DESTROY,        do_destroy },
-};
-
 #else
-
 static winproc_table_s const winproc_table[] = {
+#endif
 { WM_INITDIALOG,     do_init_dialog },
 { WM_COMMAND,        do_command },
 { WM_CLOSE,          do_close },
-{ WM_DESTROY,        do_destroy },
-
-{ 0, NULL } } ;
+{ WM_DESTROY,        do_destroy }
+#ifndef USE_VECTOR_CLASS
+,
+{ 0, NULL } 
 #endif
+} ;
 
 //*******************************************************************
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
